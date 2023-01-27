@@ -17,6 +17,10 @@ resource "google_compute_network" "vpc_network" {
   auto_create_subnetworks = "true"
 }
 
+resource "google_compute_address" "ip_address" {
+  name = "mcserver-java-external-ip-address"
+}
+
 resource "google_compute_instance" "vm_instance" {
   name         = "mcserver-java"
   machine_type = var.mcserver_java_machine_type
@@ -25,6 +29,8 @@ resource "google_compute_instance" "vm_instance" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
+      type  = "pd-ssd"
+      size  = 25
     }
   }
 
@@ -32,7 +38,11 @@ resource "google_compute_instance" "vm_instance" {
     # A default network is created for all GCP projects
     network = google_compute_network.vpc_network.self_link
     access_config {
+      nat_ip = google_compute_address.ip_address.address
     }
+  }
+  service_account {
+    scopes = ["storage-rw"]
   }
 }
 
@@ -46,7 +56,7 @@ resource "google_compute_firewall" "mcserver_java_firewall" {
 
   allow {
     protocol = "tcp"
-    ports    = ["25565"]
+    ports    = ["22", "25565"]
   }
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["mcserver-java-tag"]
