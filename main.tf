@@ -33,7 +33,10 @@ resource "google_compute_instance" "vm_instance" {
   name         = "mcserver-java"
   machine_type = var.mcserver_java_machine_type
   tags         = ["mcserver-java-tag"]
-
+  labels = {
+    "mc_server_type_java" = ""
+    "machine_number_1"    = ""
+  }
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"

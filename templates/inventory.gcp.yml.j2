@@ -1,0 +1,9 @@
+plugin: gcp_compute
+projects:
+  - "{{ PROJECT }}"
+keyed_groups:
+  - key: labels
+    prefix: label
+    trailing_separator: false
+groups:
+  mc_server_type_java: "'mc_server_type_java' in (labels|list)"
