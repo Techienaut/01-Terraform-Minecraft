@@ -20,7 +20,15 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_address" "ip_address" {
   name = "mcserver-java-external-ip-address"
 }
-
+resource "google_compute_disk" "external_disk" {
+  name = "mcserver-external-disk"
+  type = "pd-ssd"
+  size = 65
+}
+resource "google_compute_attached_disk" "attached_disk" {
+  disk     = google_compute_disk.external_disk.id
+  instance = google_compute_instance.vm_instance.id
+}
 resource "google_compute_instance" "vm_instance" {
   name         = "mcserver-java"
   machine_type = var.mcserver_java_machine_type
@@ -44,6 +52,10 @@ resource "google_compute_instance" "vm_instance" {
   service_account {
     scopes = ["storage-rw"]
   }
+
+  lifecycle {
+    ignore_changes = [attached_disk]
+  }
 }
 
 resource "google_compute_firewall" "mcserver_java_firewall" {
@@ -60,8 +72,4 @@ resource "google_compute_firewall" "mcserver_java_firewall" {
   }
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["mcserver-java-tag"]
-}
-
-output "ip_address" {
-  value = google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip
 }
