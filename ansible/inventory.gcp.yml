@@ -1,6 +1,6 @@
 plugin: gcp_compute
 projects:
-  - "techienaut-minecraft-terraform"
+  - "techienaut-02-win-lab"
 keyed_groups:
   - key: labels
     prefix: label
