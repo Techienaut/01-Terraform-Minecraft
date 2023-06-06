@@ -6,7 +6,7 @@ This project is an automation to setup a Java Minecraft server, using **Google C
 
 Some Capabilities:
 
-1. Automate the Installation/Destruction of Infrastructure of..:
+1. Automate the Installation/Destruction of Infrastructure of...:
     1. A Debian-Based VM instance in the cloud.
     2. A VPC Network (Virtual Private Cloud).
     3. Allocating a Static IP Address for the VM.
